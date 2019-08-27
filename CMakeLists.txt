@@ -3,6 +3,7 @@ project(Raytracing)
 
 set(CMAKE_CXX_STANDARD 14)
 
+file(GLOB core_files src/*.h scr/*.cpp)
 add_executable(Raytracing
         main.cpp
-        Image.h)
+        ${core_files})
