@@ -2,7 +2,7 @@
 #include "core/Image.h"
 
 
-void test_image_output() {
+void chapter1() {
 
     int width = 200;
     int height = 100;
@@ -24,8 +24,12 @@ void test_image_output() {
     image.savePPM("cst.ppm");
 }
 
+void chapter2() {
+
+}
+
 int main()
 {
-    test_image_output();
+    chapter1();
     return 0;
 }
