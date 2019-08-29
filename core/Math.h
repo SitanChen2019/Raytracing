@@ -26,7 +26,7 @@ struct vec3 {
         z = _z;
     }
 
-    vec3( REAL v)
+    explicit  vec3( REAL v)
     {
         x = v;
         y = v;
@@ -61,7 +61,7 @@ struct vec3 {
         return vec3{x+other.x, y +other.y , z +other.z};
     }
 
-    void operator-(const vec3 other) const
+    vec3 operator-(const vec3 other) const
     {
         return vec3{x-other.x, y-other.y , z-other.z};
     }
@@ -124,21 +124,28 @@ struct vec3 {
 
 };
 
-template<typename T>
-vec3 operator*(const vec3& vector, const T v)
+template <class T>
+vec3 operator*(const vec3 vector, const T v)
 {
-    return vec3( v*vector.x , v*vector.y, v*vector.z);
+    return vec3{vector.r*v,vector.g*v,vector.b*v};
 }
 
-std::ostream& operator<<(std::ostream os, const vec3 vector)
+template<typename T>
+vec3 operator*( const T v, const vec3 vector)
+{
+    return vec3{vector.r*v,vector.g*v,vector.b*v};
+}
+
+std::ostream& operator<<(std::ostream& os, const vec3 vector)
 {
     os << "[" << vector.x << "," << vector.y << "," << vector.z <<"]";
+    return os;
 }
 
 template<typename T>
-T lerp(const T v1, const T v2, real t)
+T lerp(const T v1, const T v2, REAL t)
 {
-    return v1*t+v2(1-t);
+    return v1*t+v2*(1-t);
 }
 
 #endif //RAYTRACING_MATH_H

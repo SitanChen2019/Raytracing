@@ -11,6 +11,8 @@
 #include <string>
 #include <iostream>
 
+#include "Math.h"
+
 struct ColorPixel
 {
     unsigned char r = 0;
@@ -42,6 +44,15 @@ struct ColorPixel
         b = _b;
         a = _a;
     }
+
+    ColorPixel( const vec3& color_vector3 )
+    {
+        r = char(color_vector3.r*REAL(255.99));
+        g = char(color_vector3.g*REAL(255.99));
+        b = char(color_vector3.b*REAL(255.99));
+        a = 255;
+    }
+
 };
 
 class Image
@@ -79,6 +90,7 @@ public:
     bool setPixel( int row, int col, const ColorPixel& pixel )
     {
         m_pixels[row*mWidth+col] = pixel;
+        return true;
     }
 
 private:

@@ -16,12 +16,12 @@ public:
         mDir.normalize();
     }
 
-    vec3 getOriginal() {return mPos;} const;
-    vec3 getDirection() { return mDir; } const;
+    vec3 getOriginal() const {return mPos;} ;
+    vec3 getDirection() const { return mDir; } ;
 
     vec3 point_at(REAL t)
     {
-        return mPos+t*mDir;
+        return mPos+mDir*t;
     }
 
  private:
