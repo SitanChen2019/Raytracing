@@ -19,7 +19,7 @@ public:
     vec3 getOriginal() const {return mPos;} ;
     vec3 getDirection() const { return mDir; } ;
 
-    vec3 point_at(REAL t)
+    vec3 point_at(REAL t) const
     {
         return mPos+mDir*t;
     }

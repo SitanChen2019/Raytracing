@@ -148,4 +148,24 @@ T lerp(const T v1, const T v2, REAL t)
     return v1*t+v2*(1-t);
 }
 
+const vec3 V3_ZERO= vec3{0,0,0};
+const vec3 V3_UNIT_X = vec3{1.f,0,0};
+const vec3 V3_UNIT_Y = vec3{0,1.f,0};
+const vec3 V3_UNIT_Z = vec3{0,0,1.f};
+
+
+inline bool isLess(const REAL t1, const REAL t2)
+{
+    return t1 < t2;
+}
+
+inline bool isEqual(const REAL t1, const REAL t2)
+{
+    return t1 == t2;
+}
+
+inline bool isGreat(const REAL t1, const REAL t2)
+{
+    return t1 > t2;
+}
 #endif //RAYTRACING_MATH_H
