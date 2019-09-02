@@ -33,11 +33,8 @@ void drawBackgorund( Image& image)
 
 ColorPixel normalToColor( vec3 normalDir )
 {
-    std::cout <<normalDir << std::endl;
     //assume normalDir already normalized
     vec3 tmp = (normalDir+vec3(1))*REAL(0.5);
-    tmp.g = 0;
-    tmp.b = 0;
     return ColorPixel(tmp);
 }
 

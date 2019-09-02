@@ -32,7 +32,7 @@ public:
         m_uDirection = udir.getNormal();
         m_vDirection = vdir.getNormal();
 
-        m_forwardDirection = -m_uDirection.product(m_vDirection);
+        m_forwardDirection = m_uDirection.product(m_vDirection);
     }
 
 
@@ -40,8 +40,8 @@ public:
     Ray makeRay( int x, int y, int width, int height  )
     {
         vec3 origin = m_position;
-        vec3 target = m_position + REAL(x)/REAL(width)*m_frustum.x*m_uDirection
-                + REAL(y)/REAL(height)*m_frustum.y*m_vDirection;
+        vec3 target = m_position + REAL(x - REAL(width)/2)/REAL(width)*m_frustum.x*m_uDirection
+                + REAL(y - REAL(height)/2)/REAL(height)*(-m_frustum.y)*m_vDirection
                 + m_frustum.z*m_forwardDirection;
         return Ray( origin, target - origin);
     }

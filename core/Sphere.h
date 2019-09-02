@@ -8,15 +8,15 @@
 #include "Math.h"
 #include "IHitable.h"
 
-class Sphere {
+class Sphere :public  IHitable {
 public:
     Sphere( REAL r,  vec3 center = {0,0,0})
     {
-        r = mR;
+        mR = r;
         mCenter = center;
     }
 
-    bool rayHit( const Ray& ray, const REAL t_min, const REAL t_max,  HitInfo& hitInfo)
+    bool rayHit( const Ray& ray, const REAL t_min, const REAL t_max,  HitInfo& hitInfo) override
     {
         vec3 v_CO = ray.getOriginal() - mCenter;
         vec3 r_D = ray.getDirection();

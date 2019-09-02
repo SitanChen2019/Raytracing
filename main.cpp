@@ -57,22 +57,25 @@ void chapter3() {
 
     drawBackgorund( image);
 
-    Camera camera( REAL(0.2), REAL(0.1), REAL(0.05));
-    camera.setCameraPose(vec3(0,0,0), V3_UNIT_X, V3_UNIT_Y);
+    Camera camera( REAL(0.2), REAL(0.1), REAL(0.1));
+    camera.setCameraPose(vec3(0,3,0), V3_UNIT_X, V3_UNIT_Y);
 
-    Sphere sphere(3, vec3(0,0, 10));
+    HitableList world;
+    Sphere sphere1(3, vec3(0,3, 10));
+    world.addHitable(&sphere1);
 
+    Sphere earth ( 100, vec3(3, -100, 10) );
+    world.addHitable( &earth );
     for( int r = 0 ; r < height ; ++r ) {
         for (int c = 0; c < width; c++) {
             Ray ray = camera.makeRay( c, r, width, height);
 
-            image.setPixel(r,c, normalToColor(ray.getDirection()));
 
-//            HitInfo hitInfo;
-//            if( sphere.rayHit(ray,0, std::numeric_limits<REAL>::max(), hitInfo))
-//            {
-//                std::cout << "Hit at " << hitInfo.pos << std::endl;
-//            }
+            HitInfo hitInfo;
+            if( world.rayHit(ray,0, std::numeric_limits<REAL>::max(), hitInfo))
+            {
+                image.setPixel(r,c, normalToColor(hitInfo.normal));
+            }
         }
     }
 
