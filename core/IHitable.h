@@ -25,6 +25,7 @@ struct HitInfo
 
 class IHitable
 {
+public:
     virtual bool rayHit( const Ray& ray, const REAL t_min, const REAL t_max,  HitInfo& hitInfo) = 0;
 };
 

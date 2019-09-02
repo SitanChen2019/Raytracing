@@ -6,4 +6,4 @@ set(CMAKE_CXX_STANDARD 14)
 file(GLOB core_files src/*.h scr/*.cpp)
 add_executable(Raytracing
         main.cpp
-        ${core_files} core/Math.h core/Ray.h core/core.h core/IHitable.h core/Sphere.h)
+        ${core_files} ${core_files} utils.h)

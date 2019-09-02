@@ -8,5 +8,9 @@
 #include "Image.h"
 #include "Math.h"
 #include "Ray.h"
+#include "Camera.h"
+#include "IHitable.h"
+#include "HitableList.h"
 
+#include "Sphere.h"
 #endif //RAYTRACING_CORE_H

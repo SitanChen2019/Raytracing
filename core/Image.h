@@ -93,9 +93,19 @@ public:
         return true;
     }
 
+    int getWidth() const
+    {
+        return mWidth;
+    }
+
+    int getHeight() const
+    {
+        return mHeight;
+    }
+
 private:
-    int mWidth;
-    int mHeight;
+    const int mWidth;
+    const int mHeight;
     std::vector<ColorPixel> m_pixels;
 };
 

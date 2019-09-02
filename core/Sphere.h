@@ -22,7 +22,7 @@ public:
         vec3 r_D = ray.getDirection();
 
         //a*t^2 + b*t + c = 0;
-        REAL a = r_D.square_length()
+        REAL a = r_D.square_length();
         REAL b = 2*r_D.dot(v_CO);
         REAL c = v_CO.square_length() - mR*mR;
 

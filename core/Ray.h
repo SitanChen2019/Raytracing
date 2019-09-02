@@ -12,8 +12,7 @@ public:
     Ray( vec3 pos = vec3{0,0,0}, vec3 dir = vec3{0,0,1})
     {
         mPos = pos;
-        mDir = dir;
-        mDir.normalize();
+        mDir = dir.getNormal();
     }
 
     vec3 getOriginal() const {return mPos;} ;

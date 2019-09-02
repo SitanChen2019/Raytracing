@@ -122,6 +122,7 @@ struct vec3 {
         return n;
     }
 
+
 };
 
 template <class T>
@@ -129,6 +130,8 @@ vec3 operator*(const vec3 vector, const T v)
 {
     return vec3{vector.r*v,vector.g*v,vector.b*v};
 }
+
+
 
 template<typename T>
 vec3 operator*( const T v, const vec3 vector)
