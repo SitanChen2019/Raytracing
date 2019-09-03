@@ -6,6 +6,7 @@
 #define RAYTRACING_UTILS_H
 
 #include "core/core.h"
+#include <random>
 
 void drawBackgorund( Image& image)
 {
@@ -37,5 +38,25 @@ ColorPixel normalToColor( vec3 normalDir )
     vec3 tmp = (normalDir+vec3(1))*REAL(0.5);
     return ColorPixel(tmp);
 }
+
+
+class Random01
+{
+public:
+    Random01(REAL offset = 0, unsigned seed = 0)
+    :m_generator(seed)
+    ,m_offset(offset)
+    {}
+
+    REAL getRandom() {
+        return m_distribution(m_generator) + m_offset;
+    }
+private:
+    REAL m_offset;
+    std::default_random_engine m_generator;
+    std::uniform_real_distribution<REAL> m_distribution;
+};
+
+
 
 #endif //RAYTRACING_UTILS_H

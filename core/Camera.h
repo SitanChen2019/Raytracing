@@ -36,12 +36,12 @@ public:
     }
 
 
-    //u,v range from (0,1)
-    Ray makeRay( int x, int y, int width, int height  )
+
+    Ray makeRay( REAL x, REAL y, REAL width, REAL height  )
     {
         vec3 origin = m_position;
-        vec3 target = m_position + REAL(x - REAL(width)/2)/REAL(width)*m_frustum.x*m_uDirection
-                + REAL(y - REAL(height)/2)/REAL(height)*(-m_frustum.y)*m_vDirection
+        vec3 target = m_position + (x - width/2)/width*m_frustum.x*m_uDirection
+                + (y - height/2)/height*(-m_frustum.y)*m_vDirection
                 + m_frustum.z*m_forwardDirection;
         return Ray( origin, target - origin);
     }

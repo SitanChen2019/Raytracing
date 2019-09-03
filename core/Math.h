@@ -171,4 +171,16 @@ inline bool isGreat(const REAL t1, const REAL t2)
 {
     return t1 > t2;
 }
+
+template<typename T>
+REAL R(T value)
+{
+    return static_cast<REAL>(value);
+}
+
+template<typename  T>
+REAL inverse(T value)
+{
+    return REAL(1)/value;
+}
 #endif //RAYTRACING_MATH_H

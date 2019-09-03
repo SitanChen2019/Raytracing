@@ -53,6 +53,11 @@ struct ColorPixel
         a = 255;
     }
 
+    explicit operator vec3() const
+    {
+        return vec3( R(r)/255, R(g)/255, R(b)/255);
+    }
+
 };
 
 class Image
@@ -91,6 +96,11 @@ public:
     {
         m_pixels[row*mWidth+col] = pixel;
         return true;
+    }
+
+    ColorPixel getPixel( int row, int col)
+    {
+        return m_pixels[row*mWidth+col];
     }
 
     int getWidth() const
