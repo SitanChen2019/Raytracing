@@ -237,7 +237,7 @@ void chapter9()
     HitableList world;
     vec3 material = vec3(0.5,0.5,0.5);
 
-    Sphere sphere1(0.5, vec3(0,0, -1));
+    Sphere sphere1(0.25, vec3(0,0, -1));
     world.addHitable(&sphere1);
     Material& mat1 = sphere1.getMaterial();
     mat1.setAlebdo(vec3(0.8,0.3,0.3));

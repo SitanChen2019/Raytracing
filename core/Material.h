@@ -72,7 +72,7 @@ public:
 
         if( mRefractAble )
         {
-            float reflectProbability = schlick( ray, hitInfo);
+            reflectProbability = schlick( ray, hitInfo);
             reflectProbability = 0;
 
             if (isTotalRefract(ray, hitInfo))
