@@ -11,6 +11,7 @@
 #include "Camera.h"
 #include "IHitable.h"
 #include "HitableList.h"
+#include "Material.h"
 
 #include "Sphere.h"
 #endif //RAYTRACING_CORE_H

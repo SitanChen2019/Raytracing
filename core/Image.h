@@ -47,9 +47,9 @@ struct ColorPixel
 
     ColorPixel( const vec3& color_vector3 )
     {
-        r = char(color_vector3.r*REAL(255.99));
-        g = char(color_vector3.g*REAL(255.99));
-        b = char(color_vector3.b*REAL(255.99));
+        r = char( sqrt( color_vector3.r ) *REAL(255.99));
+        g = char( sqrt( color_vector3.g )*REAL(255.99));
+        b = char( sqrt( color_vector3.b )*REAL(255.99));
         a = 255;
     }
 

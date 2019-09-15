@@ -122,6 +122,11 @@ struct vec3 {
         return n;
     }
 
+    vec3 operator*( const vec3 other) const
+    {
+        return vec3( x*other.x, y*other.y , z*other.z);
+    }
+
 
 };
 

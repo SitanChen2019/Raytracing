@@ -6,9 +6,10 @@
 #define RAYTRACING_SPHERE_H
 
 #include "Math.h"
-#include "IHitable.h"
+#include "IBody.h"
 
-class Sphere :public  IHitable {
+
+class Sphere :public  IBody {
 public:
     Sphere( REAL r,  vec3 center = {0,0,0})
     {
@@ -76,12 +77,14 @@ private:
         hitInfo.pos = ray.point_at(t);
         hitInfo.primType = PT_SURFACE;
         hitInfo.normal = (hitInfo.pos - mCenter).getNormal();
+        hitInfo.pMaterial = &mMaterial;
     }
 
 
 private:
     REAL mR;
     vec3 mCenter;
+
 
 };
 

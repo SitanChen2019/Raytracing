@@ -114,6 +114,192 @@ void chapter3() {
     image.savePPM("cst.ppm");
 }
 
+vec3 colorFromRay(  const Ray& ray, IHitable* world , int depth = 0)
+{
+    if(depth > 15 )
+        return vec3(1);
+    HitInfo hitInfo;
+    const REAL  t_min = 1e-3;
+    const REAL t_max = std::numeric_limits<REAL>::max();
+    if( world->rayHit(ray, t_min, t_max, hitInfo ) )
+    {
+        auto pair = hitInfo.pMaterial->getScatterRay(ray,hitInfo);
+        auto ret = pair.first * colorFromRay( pair.second, world, depth + 1);
+        return ret;
+    }
+    return vec3(1,1,1);
+}
+
+void chapter7()
+{
+    const REAL camera_w = R(0.16);
+    const REAL camera_h = R(0.09);
+    const REAL camera_z = R(0.05);
+
+    Camera camera( camera_w, camera_h , camera_z);
+    const REAL scope = R(3000);
+
+    int width = int( camera_w*scope);
+    int height = int( camera_h*scope);
+    Image image(width, height);
+
+    drawBackgorund( image);
+
+
+    camera.setCameraPose(vec3(0,0,0), -V3_UNIT_X, V3_UNIT_Y);
+
+    HitableList world;
+    vec3 material = vec3(0.5,0.5,0.5);
+
+    Sphere sphere1(0.5, vec3(0,0, -1));
+    world.addHitable(&sphere1);
+    Material& mat1 = sphere1.getMaterial();
+    mat1.setAlebdo(vec3(0.8,0.3,0.3));
+    mat1.setScatterMode(RANDOM_DIFFUSE);
+
+    ScatterModeData scatterData;
+    scatterData.disturb_radio = 0.1f;
+    Sphere sphere2(0.5, vec3(1,0, -1));
+    world.addHitable(&sphere2);
+    Material& mat2 = sphere2.getMaterial();
+    mat2.setAlebdo(vec3(0.5,0.9,0.5));
+    mat2.setScatterMode(MIRROR_DIFFUSE_WITH_DISTURB,scatterData);
+
+    Sphere sphere3(0.5, vec3(-1,0, -1));
+    world.addHitable(&sphere3);
+    Material& mat3 = sphere3.getMaterial();
+    mat3.setAlebdo(vec3(0.8,0.8,0.8));
+    scatterData.disturb_radio = 1.0f;
+    mat3.setScatterMode(MIRROR_DIFFUSE_WITH_DISTURB,scatterData);
+
+    Sphere earth ( 100, vec3(0, -100.5, -1) );
+    earth.getMaterial().setAlebdo(vec3(0.8,0.8,0));
+    earth.getMaterial().setScatterMode( RANDOM_DIFFUSE );
+    world.addHitable( &earth );
+
+    Random01 random(REAL(-0.5));
+    for( int r = 0 ; r < height ; ++r ) {
+        for (int c = 0; c < width; c++) {
+            REAL rW = R(width);
+            REAL rH = R(height);
+
+            //multiple samples
+            const int N = 50;
+            int hitCount = 0;
+            vec3 v3SourceColor= vec3(0);
+            for( int i = 0; i < N; ++i )
+            {
+                REAL rC = R(c) + random.getRandom();
+                REAL rR = R(r) + random.getRandom();
+
+                Ray ray = camera.makeRay( rC, rR, rW, rH);
+                HitInfo hitInfo;
+                if( world.rayHit(ray,0, std::numeric_limits<REAL>::max(), hitInfo))
+                {
+                    hitCount+=1;
+                    vec3 v3Color = colorFromRay(ray, &world);
+                    v3SourceColor = v3SourceColor + v3Color ;
+                }
+            }
+
+            if( hitCount > 0 )
+            {
+                v3SourceColor = v3SourceColor*inverse(hitCount);
+                REAL t= hitCount*inverse(N);
+                vec3 targetColor = static_cast<vec3>(image.getPixel(r,c));
+                image.setPixel(r,c, lerp(v3SourceColor, targetColor, t) );
+            }
+        }
+    }
+
+    image.savePPM("cst.ppm");
+}
+
+
+void chapter9()
+{
+    const REAL camera_w = R(0.16);
+    const REAL camera_h = R(0.09);
+    const REAL camera_z = R(0.05);
+
+    Camera camera( camera_w, camera_h , camera_z);
+    const REAL scope = R(3000);
+
+    int width = int( camera_w*scope);
+    int height = int( camera_h*scope);
+    Image image(width, height);
+
+    drawBackgorund( image);
+
+
+    camera.setCameraPose(vec3(0,0,0), -V3_UNIT_X, V3_UNIT_Y);
+
+    HitableList world;
+    vec3 material = vec3(0.5,0.5,0.5);
+
+    Sphere sphere1(0.5, vec3(0,0, -1));
+    world.addHitable(&sphere1);
+    Material& mat1 = sphere1.getMaterial();
+    mat1.setAlebdo(vec3(0.8,0.3,0.3));
+    mat1.setScatterMode(RANDOM_DIFFUSE);
+    mat1.setRefraction(true,1.53f);
+
+    Sphere sphere2(0.5, vec3(0.5,0, -1.5));
+    world.addHitable(&sphere2);
+    Material& mat2 = sphere2.getMaterial();
+    mat2.setAlebdo(vec3(0.3,0.8,0.3));
+    mat2.setScatterMode(RANDOM_DIFFUSE);
+
+    Sphere sphere3(0.5, vec3(-0.5,0, -1.5));
+    world.addHitable(&sphere3);
+    Material& mat3 = sphere3.getMaterial();
+    mat3.setAlebdo(vec3(0.3,0.3,0.8));
+    mat3.setScatterMode(MIRROR_DIFFUSE);
+
+    Sphere earth ( 100, vec3(0, -100.5, -1) );
+    earth.getMaterial().setAlebdo(vec3(0.8,0.8,0));
+    earth.getMaterial().setScatterMode( RANDOM_DIFFUSE );
+    world.addHitable( &earth );
+
+    Random01 random(REAL(-0.5));
+    for( int r = 0 ; r < height ; ++r ) {
+        for (int c = 0; c < width; c++) {
+            REAL rW = R(width);
+            REAL rH = R(height);
+
+            //multiple samples
+            const int N = 50;
+            int hitCount = 0;
+            vec3 v3SourceColor= vec3(0);
+            for( int i = 0; i < N; ++i )
+            {
+                REAL rC = R(c) + random.getRandom();
+                REAL rR = R(r) + random.getRandom();
+
+                Ray ray = camera.makeRay( rC, rR, rW, rH);
+                HitInfo hitInfo;
+                if( world.rayHit(ray,0, std::numeric_limits<REAL>::max(), hitInfo))
+                {
+                    hitCount+=1;
+                    vec3 v3Color = colorFromRay(ray, &world);
+                    v3SourceColor = v3SourceColor + v3Color ;
+                }
+            }
+
+            if( hitCount > 0 )
+            {
+                v3SourceColor = v3SourceColor*inverse(hitCount);
+                REAL t= hitCount*inverse(N);
+                vec3 targetColor = static_cast<vec3>(image.getPixel(r,c));
+                image.setPixel(r,c, lerp(v3SourceColor, targetColor, t) );
+            }
+        }
+    }
+
+    image.savePPM("cst.ppm");
+}
+
+
 void quick_test()
 {
     vec3 v(1,1,1);
@@ -126,6 +312,8 @@ int main()
     //chapter1();
     //chapter2();
     //quick_test();
-    chapter3();
+    //chapter3();
+    //chapter7();
+    chapter9();
     return 0;
 }

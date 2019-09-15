@@ -8,6 +8,8 @@
 #include "Math.h"
 #include "Ray.h"
 
+class Material;
+
 enum PrimitiveType
 {
     PT_POINT,
@@ -21,6 +23,7 @@ struct HitInfo
     vec3 pos;
     vec3 normal;
     PrimitiveType  primType;
+    Material* pMaterial = nullptr;
 };
 
 class IHitable
