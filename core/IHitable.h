@@ -24,6 +24,7 @@ struct HitInfo
     vec3 normal;
     PrimitiveType  primType;
     Material* pMaterial = nullptr;
+    bool isInRaySide = false;
 };
 
 class IHitable

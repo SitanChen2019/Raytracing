@@ -35,13 +35,28 @@ vec3 getRandomPointOnUnitSphere( Random01& rand )
 {
     while(true)
     {
-        vec3 p_in_cube {rand.getRandom(),rand.getRandom(), rand.getRandom()};
-        vec3 p_to_center = p_in_cube - vec3(0.5,0.5,0.5);
-        if( p_to_center.square_length() > 0.1 )
+        vec3 p_in_cube {rand.getRandom(),rand.getRandom(), rand.getRandom()}; //range 0,1
+        vec3 p_to_center = 2.0f*(p_in_cube - vec3(0.5,0.5,0.5)); //range [-1,1]
+        if( p_to_center.square_length() > 0.1f )
         {
             return p_to_center.getNormal();
         }
     }
+}
+
+vec3 getRandomPointOnUnitDisk( Random01& rand )
+{
+    while(true)
+    {
+        vec3  p_on_disk{rand.getRandom(),rand.getRandom(), 0}; //range[0,1]
+        p_on_disk = 2.0f*(p_on_disk -vec3(0.5,0.5,0.5) );
+        p_on_disk.z = 0;
+        if( p_on_disk.square_length() < 1 )
+        {
+            return p_on_disk;
+        }
+    }
+
 }
 
 

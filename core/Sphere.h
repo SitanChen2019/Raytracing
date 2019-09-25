@@ -70,6 +70,12 @@ public:
         return false;
     }
 
+public:
+    vec3 center() const
+    {
+        return mCenter;
+    }
+
 private:
     void makeHitInfo( const Ray& ray, const REAL t ,  HitInfo& hitInfo)
     {
