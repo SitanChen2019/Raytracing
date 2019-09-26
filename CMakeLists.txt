@@ -7,3 +7,4 @@ file(GLOB core_files src/*.h scr/*.cpp)
 add_executable(Raytracing
         main.cpp
         ${core_files} ${core_files} utils.h)
+target_link_libraries( Raytracing PRIVATE pthread)

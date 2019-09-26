@@ -1,7 +1,7 @@
 #include <iostream>
 #include "core/core.h"
 #include "utils.h"
-
+#include <future>
 void chapter1() {
 
     int width = 200;
@@ -397,12 +397,13 @@ void chapter11()
 
 void chapter12()
 {
+    bool bForceMultipleThreads = true;
     const REAL camera_w = R(0.16);
     const REAL camera_h = R(0.09);
     const REAL camera_z = R(0.2);
 
     Camera camera( camera_w, camera_h , camera_z);
-    const REAL scope = R(3000);
+    const REAL scope = R(9000);
 
     int width = int( camera_w*scope);
     int height = int( camera_h*scope);
@@ -412,7 +413,7 @@ void chapter12()
     vec3 eye = vec3(0,0,0);
     eye = vec3(13,2,3);
     camera.lookAt(eye, vec3(0,0,-1), vec3(0,1,0));
-    camera.setAperture( 0 );
+    camera.setAperture( 0.1);
 
 
     //build the world
@@ -438,7 +439,7 @@ void chapter12()
     ball3.getMaterial().setRefraction(true,1.5f);
     world.addHitable(&ball3);
 
-    Random01 random(REAL(-0.5));
+    Random01 random(0);
 
     std::vector<Sphere> smallBalls;
     for( int r = -11; r < 11; ++r )
@@ -450,14 +451,15 @@ void chapter12()
             Material& material = smallBalls.back().getMaterial();
 
             float mat_choose=  random.getRandom();
-            if( mat_choose < 0.8)
+            if( mat_choose < 0.5)
             {
                 //diffuse
-                material.setAlebdo( vec3( random.getRandom()*random.getRandom(),
-                        random.getRandom()*random.getRandom(),
-                        random.getRandom()*random.getRandom() ) );
+                material.setAlebdo( vec3( random.getRandom(),
+                        random.getRandom(),
+                        random.getRandom()) );
+                material.setScatterMode(RANDOM_DIFFUSE);
             }
-            else if( mat_choose < 0.9 )
+            else if( mat_choose < 0.8 )
             {
                 //mirror
                 material.setAlebdo( 0.5f*vec3( 1+random.getRandom(),1+random.getRandom(),1+random.getRandom() )
@@ -468,6 +470,7 @@ void chapter12()
             } else
             {
                 material.setAlebdo(vec3(1,1,1));
+                material.setScatterMode(MIRROR_DIFFUSE);
                 material.setRefraction( true, 1.5f);
             }
         }
@@ -487,12 +490,9 @@ void chapter12()
             REAL rH = R(height);
 
             //multiple samples
-            const int N = 100;
-            vec3 v3SourceColor= vec3(0);
-            for( int i = 0; i < N; ++i )
-            {
-                REAL rC = R(c) + random.getRandom();
-                REAL rR = R(r) + random.getRandom();
+            auto f = [&](int r,int c) -> vec3 {
+                REAL rC = R(c) + random.getRandom() - 0.5f;
+                REAL rR = R(r) + random.getRandom() - 0.5f;
 
                 Ray ray = camera.makeRay( rC, rR, rW, rH);
                 HitInfo hitInfo;
@@ -500,15 +500,30 @@ void chapter12()
                 {
 
                     vec3 v3Color = colorFromRay(ray, &world);
-                    if( v3Color.length() < 0.01 )
-                    {
-                        v3Color = colorFromRay( ray, &world);
-                    }
-                    v3SourceColor = v3SourceColor + v3Color ;
+                   return v3Color;
+
                 }
+            };
+
+            const int N = 100;
+            vec3 v3SourceColor= vec3(0);
+            std::vector<std::future<vec3>> sample_colors;
+            sample_colors.reserve(N);
+            for( int i = 0; i < N; ++i )
+            {
+                if( bForceMultipleThreads )
+                    sample_colors.push_back( std::async( std::launch::async, f ,r,c));
+                else
+                    sample_colors.push_back( std::async(f,r,c));
+            }
+
+            for( int i =0; i < N; ++i )
+            {
+                v3SourceColor = v3SourceColor + sample_colors[i].get();
             }
 
             //if( hitCount > 0 )
+
             {
                 image.setPixel(r,c, v3SourceColor*inverse(N) );
             }
